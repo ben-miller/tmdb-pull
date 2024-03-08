@@ -1,0 +1,7 @@
+
+# Sample config, copy to tmdb-config.toml and fill in your own values
+
+account_id = "account id"
+
+access_token = "access token"
+
