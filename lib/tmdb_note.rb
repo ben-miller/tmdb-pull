@@ -4,6 +4,31 @@ module Tmdb
 
   class MediaNote
 
+    GENRE_TAGS = {
+      28 => 'Action',
+      12 => 'Adventure',
+      16 => 'Animation',
+      35 => 'Comedy',
+      80 => 'Crime',
+      99 => 'Documentary',
+      18 => 'Drama',
+      10751 => 'Family',
+      14 => 'Fantasy',
+      36 => 'History',
+      27 => 'Horror',
+      10402 => 'Music',
+      9648 => 'Mystery',
+      10749 => 'Romance',
+      878 => 'Science Fiction',
+      10770 => 'TV Movie',
+      53 => 'Thriller',
+      10752 => 'War',
+      37 => 'Western',
+    }.map { |id, name|
+        hashtag_name = "##{name.downcase.gsub(' ', '-')}"
+          [id, hashtag_name]
+    }.to_h
+
     attr_reader :id, :title, :release_date, :poster_path, :overview, :tags
   
     def initialize(data)
@@ -12,6 +37,7 @@ module Tmdb
       @release_date = data["release_date"] || data["first_air_date"]  # For TV shows
       @poster_path = data["poster_path"]
       @overview = data["overview"]
+      @genres = data["genre_ids"].map { |id| GENRE_TAGS[id] }
     end
 
     def add_tag(tag)
@@ -19,14 +45,16 @@ module Tmdb
     end
 
     def filename
-      "#{@title} (#{@release_date}).md"
+      return "#{@title}.md" if @release_date.empty?
+      release_year = Date.parse(@release_date).year
+      "#{@title} (#{release_year}).md"
     end
   
     def generate_markdown
       <<~MARKDOWN
         #{tmdb_url}
   
-        #{tags.join("\n")}
+        #{(tags + @genres).join("\n")}
   
         ![](https://image.tmdb.org/t/p/w185#{@poster_path})
   
