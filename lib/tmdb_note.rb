@@ -45,9 +45,10 @@ module Tmdb
     end
 
     def filename
-      return "#{@title}.md" if @release_date.empty?
+      nice_title = @title.gsub(':', '-').gsub('?', '')
+      return "#{nice_title}.md" if @release_date.empty?
       release_year = Date.parse(@release_date).year
-      "#{@title} (#{release_year}).md"
+      "#{nice_title} (#{release_year}).md"
     end
   
     def generate_markdown
