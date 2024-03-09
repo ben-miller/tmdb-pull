@@ -45,7 +45,7 @@ module Tmdb
     end
 
     def filename
-      nice_title = @title.gsub(':', '-').gsub('?', '')
+      nice_title = @title.gsub(':', ' -').gsub('?', '')
       return "#{nice_title}.md" if @release_date.empty?
       release_year = Date.parse(@release_date).year
       "#{nice_title} (#{release_year}).md"
